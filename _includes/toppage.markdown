@@ -17,7 +17,7 @@ _Java 7 and Java 8 maven artifact:_
     <dependency>
         <groupId>com.zaxxer</groupId>
         <artifactId>HikariCP</artifactId>
-        <version>2.4.3</version>
+        <version>2.4.5</version>
         <scope>compile</scope>
     </dependency>
 
@@ -26,7 +26,7 @@ _Java 6 maven artifact:_
     <dependency>
         <groupId>com.zaxxer</groupId>
         <artifactId>HikariCP-java6</artifactId>
-        <version>2.3.12</version>
+        <version>2.3.13</version>
         <scope>compile</scope>
     </dependency>
 
@@ -41,5 +41,4 @@ Google discussion group [HikariCP here](https://groups.google.com/d/forum/hikari
 
 ### Requirements ###
 * Java 6 and above
-* Javassist 3.18.1+ library
 * slf4j library
