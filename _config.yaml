@@ -1,5 +1,4 @@
 markdown: kramdown
-highlighter: pygments
 
 kramdown:
   auto_ids: true
@@ -9,11 +8,3 @@ kramdown:
   input: GFM
   smart_quotes: lsquo,rsquo,ldquo,rdquo
   line_numbers: false
-
-  coderay:
-    wrap: div
-    line_numbers: nil
-    line_numbers_start: 1
-    tab_width: 4
-    bold_every: 10
-    css: class
