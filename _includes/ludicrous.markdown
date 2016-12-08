@@ -72,7 +72,7 @@ Stacking HikariCP 2.4.0 up against the usual pools in the benchmark suite...
 <sup>&#42;</sup> Java options: -server -XX:+AggressiveOpts -XX:+UseFastAccessorMethods -Xmx1096m <br/>
 </sup>
 
-## Scratching an itch
+## Scratching an Itch
 
 Having scratched my performance itch, at least for a while, I'll be turning my attention back to equally important tasks such as improving metrics reporting and performance bottleneck troubleshooting ability.
 
