@@ -1,3 +1,3 @@
 source 'https://rubygems.org'
-gem 'github-pages'
-gem 'coderay'
+
+gem 'github-pages', versions['github-pages']
