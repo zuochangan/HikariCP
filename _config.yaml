@@ -8,6 +8,7 @@ kramdown:
   smart_quotes: lsquo,rsquo,ldquo,rdquo
   use_coderay: true
   line_numbers: false
+  highlighter: coderay
 
   coderay:
     wrap: div
