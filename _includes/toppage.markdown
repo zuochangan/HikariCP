@@ -6,25 +6,25 @@ production-quality connection pool.
 Using a stub-JDBC implementation to isolate and measure the overhead of HikariCP, comparative benchmarks were
 performed on a commodity PC.
 
-<a href="http://github.com/brettwooldridge/HikariCP/wiki/HikariCP-bench-2.4.0.png"><img src="http://github.com/brettwooldridge/HikariCP/wiki/HikariCP-bench-2.4.0.png" width="680"/></a>
+<a href="https://github.com/brettwooldridge/HikariCP/wiki/HikariCP-bench-2.6.0.png"><img src="https://github.com/brettwooldridge/HikariCP/wiki/HikariCP-bench-2.6.0.png" width="680"/></a>
 
 Just drop it in and let your code run like its pants are on fire.
 
-_Java 7 and Java 8 maven artifact:_
+_Java 8 maven artifact:_
 
     <dependency>
         <groupId>com.zaxxer</groupId>
         <artifactId>HikariCP</artifactId>
-        <version>2.5.1</version>
+        <version>2.6.1</version>
         <scope>compile</scope>
     </dependency>
 
-    _Java 7 and Java 8 maven artifact:_
+_Java 7 maven artifact:_
 
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP-java7</artifactId>
-            <version>2.4.9</version>
+            <version>2.4.11</version>
             <scope>compile</scope>
         </dependency>
 
