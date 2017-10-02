@@ -15,18 +15,18 @@ _Java 8 maven artifact:_
     <dependency>
         <groupId>com.zaxxer</groupId>
         <artifactId>HikariCP</artifactId>
-        <version>2.6.1</version>
+        <version>2.7.2</version>
         <scope>compile</scope>
     </dependency>
 
-_Java 7 maven artifact:_
+_Java 7 and Java 8 maven artifact:_
 
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP-java7</artifactId>
-            <version>2.4.11</version>
-            <scope>compile</scope>
-        </dependency>
+    <dependency>
+       <groupId>com.zaxxer</groupId>
+       <artifactId>HikariCP-java7</artifactId>
+       <version>2.4.13</version>
+       <scope>compile</scope>
+    </dependency>
 
 _Java 6 maven artifact:_
 
