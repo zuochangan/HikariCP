@@ -15,7 +15,7 @@ _Java 8 maven artifact:_
     <dependency>
         <groupId>com.zaxxer</groupId>
         <artifactId>HikariCP</artifactId>
-        <version>2.7.2</version>
+        <version>2.7.8</version>
         <scope>compile</scope>
     </dependency>
 
