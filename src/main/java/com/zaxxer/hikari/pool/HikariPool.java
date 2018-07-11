@@ -167,6 +167,8 @@ public final class HikariPool extends PoolBase implements HikariPoolMXBean, IBag
                }
 
                final long now = currentTime();
+               //@todo (elapsedMillis(poolEntry.lastAccessed, now) > ALIVE_BYPASS_WINDOW_MS
+               //@todo  如果当前时间距离上一次访问的时间足够小就不检测链接的active了？ 凭什么?
                if (poolEntry.isMarkedEvicted() || (elapsedMillis(poolEntry.lastAccessed, now) > ALIVE_BYPASS_WINDOW_MS && !isConnectionAlive(poolEntry.connection))) {
                   closeConnection(poolEntry, "(connection is evicted or dead)"); // Throw away the dead connection (passed max age or failed alive test)
                   timeout = hardTimeout - elapsedMillis(startTime);
@@ -637,6 +639,7 @@ public final class HikariPool extends PoolBase implements HikariPoolMXBean, IBag
                return Boolean.TRUE;
             }
 
+            //todo 退避重试
             // failed to get connection from db, sleep and retry
             quietlySleep(sleepBackoff);
             sleepBackoff = Math.min(SECONDS.toMillis(10), Math.min(connectionTimeout, (long) (sleepBackoff * 1.5)));

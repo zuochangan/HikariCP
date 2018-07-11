@@ -65,10 +65,13 @@ public class HikariDataSource extends HikariConfig implements DataSource, Closea
     */
    public HikariDataSource(HikariConfig configuration)
    {
+      //校验过程中会做默认值处理
       configuration.validate();
+      //通过反射将configuration的属性拷贝到自身
       configuration.copyState(this);
 
       LOGGER.info("{} - Starting...", configuration.getPoolName());
+      //只有通过这种方式new的datasource才有fastPathPool
       pool = fastPathPool = new HikariPool(this);
       LOGGER.info("{} - Start completed.", configuration.getPoolName());
    }
@@ -277,7 +280,7 @@ public class HikariDataSource extends HikariConfig implements DataSource, Closea
 
    /**
     * Get the {@code HikariConfigMXBean} for this HikariDataSource instance.
-    * 
+    *
     * @return the {@code HikariConfigMXBean} instance.
     */
    public HikariConfigMXBean getHikariConfigMXBean()

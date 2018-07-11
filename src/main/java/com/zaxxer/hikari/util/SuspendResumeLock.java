@@ -19,6 +19,7 @@ package com.zaxxer.hikari.util;
 import java.util.concurrent.Semaphore;
 
 /**
+ * @todo 这个类有啥用?
  * This class implements a lock that can be used to suspend and resume the pool.  It
  * also provides a faux implementation that is used when the feature is disabled that
  * hopefully gets fully "optimized away" by the JIT.
@@ -27,13 +28,14 @@ import java.util.concurrent.Semaphore;
  */
 public class SuspendResumeLock
 {
+   //faux fake,artificial
    public static final SuspendResumeLock FAUX_LOCK = new SuspendResumeLock(false) {
       @Override
       public void acquire() {}
 
       @Override
       public void release() {}
-      
+
       @Override
       public void suspend() {}
 

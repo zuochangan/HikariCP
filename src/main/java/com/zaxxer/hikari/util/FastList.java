@@ -118,6 +118,12 @@ public final class FastList<T> implements List<T>, RandomAccess, Serializable
    }
 
    /**
+    * 从后向前扫描删除: sql操作的规律符和后开启的先结束的特征.
+    *
+    * 如果删除的是最后一个，直接将最后一个索引里的元素置空即可。
+    *
+    * 如果删除的是中间的元素，则用后面的元素覆盖当前的位置，然后删除最后一个元素.
+    *
     * This remove method is most efficient when the element being removed
     * is the last element.  Equality is identity based, not equals() based.
     * Only the first matching element is removed.
@@ -228,7 +234,7 @@ public final class FastList<T> implements List<T>, RandomAccess, Serializable
                return elementData[index++];
             }
 
-            throw new NoSuchElementException("No more elements in FastList"); 
+            throw new NoSuchElementException("No more elements in FastList");
          }
       };
    }

@@ -66,6 +66,8 @@ public class ConcurrentBag<T extends IConcurrentBagEntry> implements AutoCloseab
 {
    private static final Logger LOGGER = LoggerFactory.getLogger(ConcurrentBag.class);
 
+   //使用CopyOnWriteArrayList 避免以下场景的问题:
+   // A线程正在扫描sharedList时,B线程向sharedList添加了一个新的元素，导致循环出问题.
    private final CopyOnWriteArrayList<T> sharedList;
    private final boolean weakThreadLocals;
 
@@ -101,6 +103,7 @@ public class ConcurrentBag<T extends IConcurrentBagEntry> implements AutoCloseab
    public ConcurrentBag(final IBagStateListener listener)
    {
       this.listener = listener;
+
       this.weakThreadLocals = useWeakThreadLocals();
 
       this.handoffQueue = new SynchronousQueue<>(true);
@@ -130,6 +133,7 @@ public class ConcurrentBag<T extends IConcurrentBagEntry> implements AutoCloseab
       for (int i = list.size() - 1; i >= 0; i--) {
          final Object entry = list.remove(i);
          @SuppressWarnings("unchecked")
+         //如果用了weakRefrence,有可能在下次用的时候，连接以及被回收了. 或者放入当前线程的连接被别的线程用了.
          final T bagEntry = weakThreadLocals ? ((WeakReference<T>) entry).get() : (T) entry;
          if (bagEntry != null && bagEntry.compareAndSet(STATE_NOT_IN_USE, STATE_IN_USE)) {
             return bagEntry;
@@ -142,6 +146,7 @@ public class ConcurrentBag<T extends IConcurrentBagEntry> implements AutoCloseab
          for (T bagEntry : sharedList) {
             if (bagEntry.compareAndSet(STATE_NOT_IN_USE, STATE_IN_USE)) {
                // If we may have stolen another waiter's connection, request another bag add.
+               // todo waiting > 1 说明同时有两个线程在borrow connection. 但这也不足以说明非要自己触发添加一个连接吧?
                if (waiting > 1) {
                   listener.addBagItem(waiting - 1);
                }
@@ -149,11 +154,15 @@ public class ConcurrentBag<T extends IConcurrentBagEntry> implements AutoCloseab
             }
          }
 
+         //当前连接池的连接都在使用中，添加一个生成连接的请求（因为连接池可能还没达到最大允许值)
          listener.addBagItem(waiting);
 
          timeout = timeUnit.toNanos(timeout);
+
+         //循环尝试，知道时间小于10us.
          do {
             final long start = currentTime();
+            //todo 这里为什么要用一个synchronous Queue 和 普通的block queue相比有什么优势?
             final T bagEntry = handoffQueue.poll(timeout, NANOSECONDS);
             if (bagEntry == null || bagEntry.compareAndSet(STATE_NOT_IN_USE, STATE_IN_USE)) {
                return bagEntry;
@@ -180,12 +189,15 @@ public class ConcurrentBag<T extends IConcurrentBagEntry> implements AutoCloseab
     */
    public void requite(final T bagEntry)
    {
+      //todo 只是标记下状态
       bagEntry.setState(STATE_NOT_IN_USE);
 
+      //todo 如果当前有线程在等待使用连接，则通过handoffQueue把连接交给另外一个线程.
       for (int i = 0; waiters.get() > 0; i++) {
          if (bagEntry.getState() != STATE_NOT_IN_USE || handoffQueue.offer(bagEntry)) {
             return;
          }
+         //todo 在某些索引下暂停一段时间 这里的意图是?
          else if ((i & 0x100) == 0x100) {
             parkNanos(MICROSECONDS.toNanos(10));
          }
@@ -194,6 +206,7 @@ public class ConcurrentBag<T extends IConcurrentBagEntry> implements AutoCloseab
          }
       }
 
+      //todo 为什么要加入threadLocalList？ 在这里将连接放入threadLocal ,方便当前线程的复用
       final List<Object> threadLocalList = threadList.get();
       threadLocalList.add(weakThreadLocals ? new WeakReference<>(bagEntry) : bagEntry);
    }
@@ -213,6 +226,7 @@ public class ConcurrentBag<T extends IConcurrentBagEntry> implements AutoCloseab
       sharedList.add(bagEntry);
 
       // spin until a thread takes it or none are waiting
+      // todo 如果有人在等待就立即将连接通过handOffqueue交出去.
       while (waiters.get() > 0 && !handoffQueue.offer(bagEntry)) {
          yield();
       }
@@ -373,6 +387,7 @@ public class ConcurrentBag<T extends IConcurrentBagEntry> implements AutoCloseab
    }
 
    /**
+    * todo  什么用途?
     * Determine whether to use WeakReferences based on whether there is a
     * custom ClassLoader implementation sitting between this class and the
     * System ClassLoader.

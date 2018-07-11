@@ -197,6 +197,7 @@ public abstract class ProxyConnection implements Connection
       final int size = openStatements.size();
       if (size > 0) {
          for (int i = 0; i < size && delegate != ClosedConnection.CLOSED_CONNECTION; i++) {
+            //@todo 利用try-catch块释放资源
             try (Statement ignored = openStatements.get(i)) {
                // automatic resource cleanup
             }
